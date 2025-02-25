@@ -272,7 +272,7 @@
             <div class="search-results" id="search-results"></div>
             
             <div class="similar-results" id="similar-container" style="display: none;">
-                <h2 class="similar-title" id="similar-title">Similar to <span id="similar-to"></span></h2>
+                <h2 class="similar-title" id="similar-title">What To Watch After <span id="similar-to"></span></h2>
                 <div class="search-results" id="similar-results"></div>
             </div>
         </div>
@@ -351,8 +351,19 @@
         }
 
         async function getSimilarMedia(id, type) {
-            const response = await fetchFromApi(`/${type}/${id}/similar`);
-            return response.results;
+            // First try to get recommendations (usually better than similar)
+            try {
+                const recommendResponse = await fetchFromApi(`/${type}/${id}/recommendations`);
+                if (recommendResponse.results && recommendResponse.results.length > 0) {
+                    return recommendResponse.results;
+                }
+            } catch (error) {
+                console.log("Recommendations API failed, falling back to similar");
+            }
+            
+            // Fallback to similar if recommendations don't work or return empty
+            const similarResponse = await fetchFromApi(`/${type}/${id}/similar`);
+            return similarResponse.results;
         }
 
         async function fetchFromApi(endpoint) {
@@ -385,14 +396,27 @@
 
             try {
                 const similarMedia = await getSimilarMedia(id, type);
-                if (similarMedia.length > 0) {
+                
+                // Filter out exact title matches and limit to top 12 results
+                const filteredMedia = similarMedia
+                    .filter(item => {
+                        const itemTitle = type === 'tv' ? item.name : item.title;
+                        return !itemTitle.toLowerCase().includes(title.toLowerCase()) && 
+                               !title.toLowerCase().includes(itemTitle.toLowerCase());
+                    })
+                    .slice(0, 12);
+                
+                if (filteredMedia.length > 0) {
                     similarToSpan.textContent = title;
                     similarContainer.style.display = 'block';
                     
-                    similarMedia.forEach(item => {
+                    filteredMedia.forEach(item => {
                         const card = createMediaCard(item, type);
                         similarResults.appendChild(card);
                     });
+                } else {
+                    noResults.style.display = 'block';
+                    noResults.innerHTML = '<h3>No recommendations found</h3><p>Try another title to find recommendations.</p>';
                 }
             } catch (error) {
                 console.error('Error getting similar media:', error);
