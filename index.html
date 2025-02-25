@@ -52,14 +52,27 @@
             width: 100%;
             max-width: 600px;
             margin-bottom: 1rem;
+            flex-direction: column;
         }
 
-        input[type="text"] {
+        .search-row {
+            display: flex;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        input[type="text"], textarea {
             flex: 1;
             padding: 0.8rem;
             font-size: 1rem;
             border: 1px solid #ddd;
-            border-radius: 4px 0 0 4px;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
         }
 
         .search-button {
@@ -69,8 +82,9 @@
             padding: 0.8rem 1.5rem;
             font-size: 1rem;
             cursor: pointer;
-            border-radius: 0 4px 4px 0;
+            border-radius: 4px;
             transition: background-color 0.3s;
+            margin-top: 1rem;
         }
 
         .search-button:hover {
@@ -210,18 +224,65 @@
             fill: #ffc107;
         }
 
+        .genre-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .genre-chip {
+            background-color: #e0e0e0;
+            border-radius: 16px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .genre-chip.selected {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .search-tabs {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-tab {
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .search-tab.active {
+            border-bottom: 2px solid var(--secondary-color);
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .search-panel {
+            display: none;
+        }
+
+        .search-panel.active {
+            display: block;
+            width: 100%;
+        }
+
         @media (max-width: 768px) {
-            .search-box {
+            .search-row {
                 flex-direction: column;
             }
 
-            input[type="text"] {
-                border-radius: 4px;
-                margin-bottom: 0.5rem;
-            }
-
             .search-button {
-                border-radius: 4px;
                 width: 100%;
             }
 
@@ -238,20 +299,45 @@
 <body>
     <header>
         <h1>What To Watch Next</h1>
-        <p>Find recommendations based on your favorite content</p>
+        <p>Find recommendations based on your preferences</p>
     </header>
 
     <div class="container">
         <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Enter a movie or TV show title...">
-                <button class="search-button" id="search-button">Search</button>
+            <div class="search-tabs">
+                <div class="search-tab active" data-tab="keyword">Keyword Search</div>
+                <div class="search-tab" data-tab="genre">Genre Search</div>
+                <div class="search-tab" data-tab="plot">Plot Description</div>
             </div>
+
+            <div class="search-panel active" id="keyword-panel">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Enter a movie or TV show title...">
+                </div>
+            </div>
+
+            <div class="search-panel" id="genre-panel">
+                <h3>Select Genres</h3>
+                <div class="genre-container" id="genre-container">
+                    <!-- Genre chips will be added dynamically -->
+                    <div class="spinner" id="genre-spinner"></div>
+                </div>
+            </div>
+
+            <div class="search-panel" id="plot-panel">
+                <div class="search-box">
+                    <textarea id="plot-input" placeholder="Describe a plot or themes you're interested in..."></textarea>
+                    <p>Examples: "Time travel adventure with romance", "Psychological thriller about identity", "Comedy about friends in a workplace"</p>
+                </div>
+            </div>
+
             <div class="toggle-container">
                 <button class="toggle-button active" id="toggle-all">All</button>
                 <button class="toggle-button" id="toggle-movies">Movies</button>
                 <button class="toggle-button" id="toggle-tv">TV Shows</button>
             </div>
+
+            <button class="search-button" id="search-button">Search</button>
         </div>
 
         <div class="error-message" id="error-message">
@@ -265,7 +351,7 @@
 
         <div class="no-results" id="no-results">
             <h3>No results found</h3>
-            <p>Try a different search term or check your spelling.</p>
+            <p>Try different search criteria or check your spelling.</p>
         </div>
 
         <div class="results-container">
@@ -287,6 +373,7 @@
 
         // DOM Elements
         const searchInput = document.getElementById('search-input');
+        const plotInput = document.getElementById('plot-input');
         const searchButton = document.getElementById('search-button');
         const searchResults = document.getElementById('search-results');
         const similarContainer = document.getElementById('similar-container');
@@ -299,9 +386,103 @@
         const loading = document.getElementById('loading');
         const errorMessage = document.getElementById('error-message');
         const noResults = document.getElementById('no-results');
+        const genreContainer = document.getElementById('genre-container');
+        const searchTabs = document.querySelectorAll('.search-tab');
+        const searchPanels = document.querySelectorAll('.search-panel');
+        const genreSpinner = document.getElementById('genre-spinner');
 
         // State
         let searchType = 'multi'; // 'multi', 'movie', or 'tv'
+        let activeTab = 'keyword'; // 'keyword', 'genre', or 'plot'
+        let genres = {
+            movie: [],
+            tv: []
+        };
+        let selectedGenres = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+        async function initializeApp() {
+            // Fetch genres when the app loads
+            try {
+                const [movieGenres, tvGenres] = await Promise.all([
+                    fetchFromApi('/genre/movie/list'),
+                    fetchFromApi('/genre/tv/list')
+                ]);
+                
+                genres.movie = movieGenres.genres;
+                genres.tv = tvGenres.genres;
+                
+                // Combine and deduplicate genres
+                renderGenreChips();
+            } catch (error) {
+                console.error('Error loading genres:', error);
+                showError();
+            }
+
+            // Set up tab switching
+            searchTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    searchTabs.forEach(t => t.classList.remove('active'));
+                    searchPanels.forEach(p => p.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    activeTab = tab.dataset.tab;
+                    document.getElementById(`${activeTab}-panel`).classList.add('active');
+                });
+            });
+        }
+
+        function renderGenreChips() {
+            genreSpinner.style.display = 'none';
+            
+            // Combine genres from movies and TV, removing duplicates
+            const uniqueGenres = [];
+            const seenIds = new Set();
+            
+            // Add movie genres
+            genres.movie.forEach(genre => {
+                if (!seenIds.has(genre.id)) {
+                    uniqueGenres.push(genre);
+                    seenIds.add(genre.id);
+                }
+            });
+            
+            // Add TV genres if not already added
+            genres.tv.forEach(genre => {
+                if (!seenIds.has(genre.id)) {
+                    uniqueGenres.push(genre);
+                    seenIds.add(genre.id);
+                }
+            });
+            
+            // Sort alphabetically
+            uniqueGenres.sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Create chips
+            genreContainer.innerHTML = '';
+            uniqueGenres.forEach(genre => {
+                const chip = document.createElement('div');
+                chip.className = 'genre-chip';
+                chip.textContent = genre.name;
+                chip.dataset.id = genre.id;
+                
+                chip.addEventListener('click', () => {
+                    chip.classList.toggle('selected');
+                    
+                    if (chip.classList.contains('selected')) {
+                        if (!selectedGenres.includes(genre.id)) {
+                            selectedGenres.push(genre.id);
+                        }
+                    } else {
+                        selectedGenres = selectedGenres.filter(id => id !== genre.id);
+                    }
+                });
+                
+                genreContainer.appendChild(chip);
+            });
+        }
 
         // Event Listeners
         searchButton.addEventListener('click', handleSearch);
@@ -324,14 +505,40 @@
         }
 
         async function handleSearch() {
-            const query = searchInput.value.trim();
-            if (!query) return;
+            let query = '';
+            let validSearch = false;
+            
+            // Check which search method is active
+            if (activeTab === 'keyword') {
+                query = searchInput.value.trim();
+                validSearch = query !== '';
+            } else if (activeTab === 'genre') {
+                validSearch = selectedGenres.length > 0;
+            } else if (activeTab === 'plot') {
+                query = plotInput.value.trim();
+                validSearch = query !== '';
+            }
+            
+            if (!validSearch) {
+                // Show error or alert
+                alert('Please enter a search term or select genres');
+                return;
+            }
 
             showLoading();
             resetResults();
 
             try {
-                const results = await searchMedia(query);
+                let results = [];
+                
+                if (activeTab === 'keyword') {
+                    results = await searchByKeyword(query);
+                } else if (activeTab === 'genre') {
+                    results = await searchByGenre();
+                } else if (activeTab === 'plot') {
+                    results = await searchByPlot(query);
+                }
+                
                 if (results.length === 0) {
                     showNoResults();
                 } else {
@@ -345,9 +552,80 @@
             }
         }
 
-        async function searchMedia(query) {
+        async function searchByKeyword(query) {
             const response = await fetchFromApi(`/search/${searchType}?query=${encodeURIComponent(query)}&include_adult=false`);
-            return response.results.filter(item => item.media_type !== 'person' && (item.media_type === 'movie' || item.media_type === 'tv'));
+            return response.results.filter(item => 
+                (searchType === 'multi' ? item.media_type !== 'person' : true) && 
+                (searchType === 'multi' ? (item.media_type === 'movie' || item.media_type === 'tv') : true)
+            );
+        }
+
+        async function searchByGenre() {
+            // If no genres selected, return empty array
+            if (selectedGenres.length === 0) return [];
+            
+            const genreString = selectedGenres.join(',');
+            const mediaType = searchType === 'multi' ? 'movie' : searchType; // Default to movie if 'multi'
+            
+            // Use the discover API to find content by genre
+            const response = await fetchFromApi(`/discover/${mediaType}?with_genres=${genreString}&sort_by=popularity.desc`);
+            
+            let results = response.results;
+            
+            // If 'multi' is selected, also search for TV shows with these genres
+            if (searchType === 'multi') {
+                const tvResponse = await fetchFromApi(`/discover/tv?with_genres=${genreString}&sort_by=popularity.desc`);
+                
+                // Add media_type to each result
+                results = results.map(item => ({...item, media_type: 'movie'}));
+                const tvResults = tvResponse.results.map(item => ({...item, media_type: 'tv'}));
+                
+                // Combine and sort by popularity
+                results = [...results, ...tvResults].sort((a, b) => b.popularity - a.popularity);
+            }
+            
+            return results;
+        }
+
+        async function searchByPlot(plotDescription) {
+            // Convert plot to keywords
+            const keywords = plotDescription.split(/\s+/)
+                .filter(word => word.length > 3)  // Filter out short words
+                .slice(0, 5);  // Limit to 5 keywords
+            
+            // First try to search by the entire plot as a query
+            const fullQueryResults = await searchByKeyword(plotDescription);
+            
+            // If we have enough results, return them
+            if (fullQueryResults.length >= 5) {
+                return fullQueryResults;
+            }
+            
+            // Otherwise, try to find content with similar themes using keywords
+            const keywordPromises = keywords.map(keyword => 
+                searchByKeyword(keyword)
+            );
+            
+            const keywordResults = await Promise.all(keywordPromises);
+            
+            // Flatten and deduplicate results
+            const allResults = [...fullQueryResults];
+            const seenIds = new Set(fullQueryResults.map(item => `${item.id}-${item.media_type || (item.first_air_date ? 'tv' : 'movie')}`));
+            
+            keywordResults.forEach(results => {
+                results.forEach(item => {
+                    const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+                    const itemId = `${item.id}-${mediaType}`;
+                    
+                    if (!seenIds.has(itemId)) {
+                        allResults.push(item);
+                        seenIds.add(itemId);
+                    }
+                });
+            });
+            
+            // Sort by popularity
+            return allResults.sort((a, b) => b.popularity - a.popularity).slice(0, 20);
         }
 
         async function getSimilarMedia(id, type) {
@@ -383,7 +661,11 @@
 
         function displaySearchResults(results) {
             searchResults.innerHTML = '';
-            results.forEach(item => {
+            
+            // Limit to 24 results for better performance
+            const limitedResults = results.slice(0, 24);
+            
+            limitedResults.forEach(item => {
                 const card = createMediaCard(item);
                 searchResults.appendChild(card);
             });
