@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What To Watch Next</title>
+    <style>
+        :root {
+            --primary-color: #032541;
+            --secondary-color: #01b4e4;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --card-color: #fff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+            background-color: var(--card-color);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #019bc2;
+        }
+
+        .toggle-container {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .toggle-button {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .toggle-button.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--secondary-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-container {
+            margin-top: 2rem;
+        }
+
+        .search-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .result-card {
+            width: 200px;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .card-info {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .similar-results {
+            margin-top: 2rem;
+        }
+
+        .similar-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .error-message {
+            text-align: center;
+            color: #e53935;
+            padding: 1rem;
+            background-color: #ffebee;
+            border-radius: 4px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-color);
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .rating svg {
+            width: 18px;
+            height: 18px;
+            margin-right: 4px;
+            fill: #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            input[type="text"] {
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+            }
+
+            .search-button {
+                border-radius: 4px;
+                width: 100%;
+            }
+
+            .result-card {
+                width: 150px;
+            }
+
+            .card-image {
+                height: 225px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>What To Watch Next</h1>
+        <p>Find recommendations based on your favorite content</p>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Enter a movie or TV show title...">
+                <button class="search-button" id="search-button">Search</button>
+            </div>
+            <div class="toggle-container">
+                <button class="toggle-button active" id="toggle-all">All</button>
+                <button class="toggle-button" id="toggle-movies">Movies</button>
+                <button class="toggle-button" id="toggle-tv">TV Shows</button>
+            </div>
+        </div>
+
+        <div class="error-message" id="error-message">
+            Sorry, there was an error processing your request. Please try again.
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Searching for content...</p>
+        </div>
+
+        <div class="no-results" id="no-results">
+            <h3>No results found</h3>
+            <p>Try a different search term or check your spelling.</p>
+        </div>
+
+        <div class="results-container">
+            <div class="search-results" id="search-results"></div>
+            
+            <div class="similar-results" id="similar-container" style="display: none;">
+                <h2 class="similar-title" id="similar-title">Similar to <span id="similar-to"></span></h2>
+                <div class="search-results" id="similar-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MjhiYzcxZTI2ODJmYzJmOGI1YjYzNGQ2ZjY3MTYyZSIsIm5iZiI6MTc0MDQ5NjE3My41NTIsInN1YiI6IjY3YmRkZDJkNzYxNzU2OGZjNjVlOWZlNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._ZUjD-qC3Duv8FxHAs1Psnzaw_c7e5POR9PhnOo8H8c';
+        const BASE_URL = 'https://api.themoviedb.org/3';
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+        const PLACEHOLDER_IMAGE = '/api/placeholder/200/300';
+
+        // DOM Elements
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchResults = document.getElementById('search-results');
+        const similarContainer = document.getElementById('similar-container');
+        const similarTitle = document.getElementById('similar-title');
+        const similarToSpan = document.getElementById('similar-to');
+        const similarResults = document.getElementById('similar-results');
+        const toggleAll = document.getElementById('toggle-all');
+        const toggleMovies = document.getElementById('toggle-movies');
+        const toggleTV = document.getElementById('toggle-tv');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('error-message');
+        const noResults = document.getElementById('no-results');
+
+        // State
+        let searchType = 'multi'; // 'multi', 'movie', or 'tv'
+
+        // Event Listeners
+        searchButton.addEventListener('click', handleSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
+        });
+
+        toggleAll.addEventListener('click', () => setSearchType('multi'));
+        toggleMovies.addEventListener('click', () => setSearchType('movie'));
+        toggleTV.addEventListener('click', () => setSearchType('tv'));
+
+        // Functions
+        function setSearchType(type) {
+            searchType = type;
+            toggleAll.classList.toggle('active', type === 'multi');
+            toggleMovies.classList.toggle('active', type === 'movie');
+            toggleTV.classList.toggle('active', type === 'tv');
+        }
+
+        async function handleSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            showLoading();
+            resetResults();
+
+            try {
+                const results = await searchMedia(query);
+                if (results.length === 0) {
+                    showNoResults();
+                } else {
+                    displaySearchResults(results);
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showError();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        async function searchMedia(query) {
+            const response = await fetchFromApi(`/search/${searchType}?query=${encodeURIComponent(query)}&include_adult=false`);
+            return response.results.filter(item => item.media_type !== 'person' && (item.media_type === 'movie' || item.media_type === 'tv'));
+        }
+
+        async function getSimilarMedia(id, type) {
+            const response = await fetchFromApi(`/${type}/${id}/similar`);
+            return response.results;
+        }
+
+        async function fetchFromApi(endpoint) {
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            return await response.json();
+        }
+
+        function displaySearchResults(results) {
+            searchResults.innerHTML = '';
+            results.forEach(item => {
+                const card = createMediaCard(item);
+                searchResults.appendChild(card);
+            });
+        }
+
+        async function showSimilarMedia(id, type, title) {
+            showLoading();
+            similarContainer.style.display = 'none';
+            similarResults.innerHTML = '';
+
+            try {
+                const similarMedia = await getSimilarMedia(id, type);
+                if (similarMedia.length > 0) {
+                    similarToSpan.textContent = title;
+                    similarContainer.style.display = 'block';
+                    
+                    similarMedia.forEach(item => {
+                        const card = createMediaCard(item, type);
+                        similarResults.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error getting similar media:', error);
+                showError();
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function createMediaCard(item, forcedType = null) {
+            const type = forcedType || item.media_type || (item.first_air_date ? 'tv' : 'movie');
+            const title = type === 'tv' ? item.name : item.title;
+            const date = type === 'tv' ? item.first_air_date : item.release_date;
+            const formattedDate = date ? new Date(date).getFullYear() : 'Unknown';
+            
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.setAttribute('data-id', item.id);
+            card.setAttribute('data-type', type);
+            card.setAttribute('data-title', title);
+            
+            card.addEventListener('click', () => {
+                showSimilarMedia(item.id, type, title);
+                window.scrollTo({ top: similarContainer.offsetTop - 20, behavior: 'smooth' });
+            });
+            
+            const imageUrl = item.poster_path ? `${IMAGE_BASE_URL}${item.poster_path}` : PLACEHOLDER_IMAGE;
+            
+            card.innerHTML = `
+                <img class="card-image" src="${imageUrl}" alt="${title}" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+                <div class="card-content">
+                    <div class="card-title">${title}</div>
+                    <div class="card-info">
+                        <span>${formattedDate}</span>
+                        <span class="rating">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                            </svg>
+                            ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Utility functions
+        function showLoading() {
+            loading.style.display = 'block';
+        }
+
+        function hideLoading() {
+            loading.style.display = 'none';
+        }
+
+        function showError() {
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        function showNoResults() {
+            noResults.style.display = 'block';
+        }
+
+        function resetResults() {
+            searchResults.innerHTML = '';
+            similarContainer.style.display = 'none';
+            similarResults.innerHTML = '';
+            errorMessage.style.display = 'none';
+            noResults.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
