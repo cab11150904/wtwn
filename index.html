@@ -52,22 +52,32 @@
             width: 100%;
             max-width: 600px;
             margin-bottom: 1rem;
-            flex-direction: column;
+            flex-direction: column; /* Ensures label is above input */
         }
 
-        .search-row {
+        /* Style for labels within search-box */
+        .search-box label {
+            display: block; 
+            margin-bottom: 0.5rem; 
+            font-weight: bold;
+            color: var(--text-color); /* Ensure label color is consistent */
+        }
+
+        .search-row { 
             display: flex;
             margin-bottom: 1rem;
             width: 100%;
         }
 
         input[type="text"], textarea {
-            flex: 1;
+            flex: 1; 
             padding: 0.8rem;
             font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: inherit;
+            width: 100%; /* Ensure inputs take full width of their container */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
 
         textarea {
@@ -84,16 +94,20 @@
             cursor: pointer;
             border-radius: 4px;
             transition: background-color 0.3s;
-            margin-top: 1rem;
+            margin-top: 1rem; /* Spacing above the button */
+            width: 100%; /* Make button full width of its container */
+            max-width: 600px; /* Align with search box max-width */
         }
 
         .search-button:hover {
-            background-color: #019bc2;
+            background-color: #019bc2; /* Darker shade on hover */
         }
 
         .toggle-container {
             display: flex;
-            margin-top: 1rem;
+            justify-content: center; /* Center toggle buttons */
+            margin-top: 1rem; 
+            margin-bottom: 1rem; /* Added margin below for spacing */
         }
 
         .toggle-button {
@@ -115,7 +129,7 @@
         .loading {
             text-align: center;
             margin: 2rem 0;
-            display: none;
+            display: none; /* Hidden by default */
         }
 
         .spinner {
@@ -123,9 +137,9 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border-left-color: var(--secondary-color);
+            border-left-color: var(--secondary-color); /* Spinner color */
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto; /* Center spinner */
         }
 
         @keyframes spin {
@@ -140,29 +154,29 @@
         .search-results {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem;
-            justify-content: center;
+            gap: 1.5rem; /* Space between cards */
+            justify-content: center; /* Center cards in the container */
         }
 
         .result-card {
-            width: 200px;
+            width: 200px; /* Default width for cards */
             background-color: var(--card-color);
             border-radius: 8px;
-            overflow: hidden;
+            overflow: hidden; /* Ensures content respects border radius */
             box-shadow: var(--shadow);
             transition: transform 0.3s;
             cursor: pointer;
         }
 
         .result-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px); /* Slight lift effect on hover */
         }
 
         .card-image {
             width: 100%;
-            height: 300px;
-            object-fit: cover;
-            background-color: #ddd;
+            height: 300px; /* Fixed height for images */
+            object-fit: cover; /* Ensures image covers the area, cropping if necessary */
+            background-color: #ddd; /* Placeholder color if image fails to load */
         }
 
         .card-content {
@@ -173,13 +187,17 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             font-size: 1rem;
+            white-space: nowrap; /* Prevent title from wrapping */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Add ellipsis for long titles */
         }
 
         .card-info {
             font-size: 0.9rem;
             color: #666;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Pushes year and rating to opposite ends */
+            align-items: center; /* Vertically align year and rating */
         }
 
         .similar-results {
@@ -190,16 +208,18 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             text-align: center;
+            color: var(--primary-color); /* Use primary color for this title */
         }
 
         .error-message {
             text-align: center;
-            color: #e53935;
+            color: #e53935; /* Red color for errors */
             padding: 1rem;
-            background-color: #ffebee;
+            background-color: #ffebee; /* Light red background */
             border-radius: 4px;
-            margin: 1rem 0;
-            display: none;
+            margin: 1rem auto; /* Centered */
+            max-width: 600px; /* Consistent width */
+            display: none; /* Hidden by default */
         }
 
         .no-results {
@@ -207,12 +227,14 @@
             padding: 2rem;
             background-color: var(--card-color);
             border-radius: 8px;
-            margin: 1rem 0;
-            display: none;
+            margin: 1rem auto; /* Centered */
+            max-width: 600px; /* Consistent width */
+            display: none; /* Hidden by default */
+            box-shadow: var(--shadow);
         }
 
         .rating {
-            display: inline-flex;
+            display: inline-flex; /* Align icon and text */
             align-items: center;
             font-weight: bold;
         }
@@ -221,7 +243,7 @@
             width: 18px;
             height: 18px;
             margin-right: 4px;
-            fill: #ffc107;
+            fill: #ffc107; /* Gold color for star */
         }
 
         .genre-container {
@@ -230,7 +252,8 @@
             gap: 0.5rem;
             margin: 1rem 0;
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* Match search-box width */
+            justify-content: center; /* Center genre chips */
         }
 
         .genre-chip {
@@ -260,6 +283,9 @@
             cursor: pointer;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
+            text-align: center;
+            flex-grow: 1; /* Allow tabs to share space equally */
+            color: var(--text-color);
         }
 
         .search-tab.active {
@@ -269,29 +295,58 @@
         }
 
         .search-panel {
-            display: none;
+            display: none; /* Panels are hidden by default */
         }
 
         .search-panel.active {
-            display: block;
-            width: 100%;
+            display: block; /* Active panel is shown */
+            width: 100%; 
+            max-width: 600px; /* Consistent width for panels */
         }
-
+        
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .search-row {
+            .search-row { 
                 flex-direction: column;
             }
 
-            .search-button {
-                width: 100%;
-            }
-
             .result-card {
-                width: 150px;
+                width: calc(50% - 1rem); 
+                max-width: 170px; 
             }
 
             .card-image {
-                height: 225px;
+                height: 255px; 
+            }
+            .search-tabs {
+                flex-direction: column; 
+            }
+            .search-tab {
+                border-bottom: 1px solid #ddd; 
+            }
+            .search-tab.active {
+                 border-bottom: 2px solid var(--secondary-color); 
+            }
+        }
+         @media (max-width: 480px) { 
+            .result-card {
+                width: calc(100% - 1rem); 
+                max-width: 200px; 
+            }
+             .card-image {
+                height: 300px; 
+            }
+            .container {
+                padding: 0.5rem; 
+            }
+            .search-container {
+                padding: 1rem; 
+            }
+            header h1 {
+                font-size: 1.5rem; 
+            }
+            header p {
+                font-size: 0.9rem; 
             }
         }
     </style>
@@ -305,29 +360,34 @@
     <div class="container">
         <div class="search-container">
             <div class="search-tabs">
-                <div class="search-tab active" data-tab="keyword">Keyword Search</div>
-                <div class="search-tab" data-tab="genre">Genre Search</div>
+                <div class="search-tab active" data-tab="keyword">Keyword/Genre</div>
+                <div class="search-tab" data-tab="genre">Genre Selection</div> 
                 <div class="search-tab" data-tab="plot">Plot Description</div>
             </div>
 
             <div class="search-panel active" id="keyword-panel">
                 <div class="search-box">
+                    <label for="search-input">Keyword Search</label>
                     <input type="text" id="search-input" placeholder="Enter a movie or TV show title...">
+                </div>
+                <div class="search-box" style="margin-top: 1.5rem;"> 
+                    <label for="text-genre-search-input">Genre Search (Type)</label>
+                    <input type="text" id="text-genre-search-input" placeholder="Enter a genre name (e.g., Action, Comedy)...">
                 </div>
             </div>
 
             <div class="search-panel" id="genre-panel">
-                <h3>Select Genres</h3>
+                <h3 style="text-align:center; margin-bottom:1rem;">Or Select Genres (Chips)</h3>
                 <div class="genre-container" id="genre-container">
-                    <!-- Genre chips will be added dynamically -->
-                    <div class="spinner" id="genre-spinner"></div>
+                    <div class="spinner" id="genre-spinner"></div> 
                 </div>
             </div>
 
             <div class="search-panel" id="plot-panel">
                 <div class="search-box">
+                    <label for="plot-input">Plot Description Search</label>
                     <textarea id="plot-input" placeholder="Describe a plot or themes you're interested in..."></textarea>
-                    <p>Examples: "Time travel adventure with romance", "Psychological thriller about identity", "Comedy about friends in a workplace"</p>
+                    <p style="font-size: 0.85em; color: #555; margin-top: 0.5rem;">Examples: "Time travel adventure with romance", "Psychological thriller about identity", "Comedy about friends in a workplace"</p>
                 </div>
             </div>
 
@@ -365,15 +425,17 @@
     </div>
 
     <script>
-        // Constants
+        // Constants for API interaction
         const API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MjhiYzcxZTI2ODJmYzJmOGI1YjYzNGQ2ZjY3MTYyZSIsIm5iZiI6MTc0MDQ5NjE3My41NTIsInN1YiI6IjY3YmRkZDJkNzYxNzU2OGZjNjVlOWZlNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._ZUjD-qC3Duv8FxHAs1Psnzaw_c7e5POR9PhnOo8H8c';
         const BASE_URL = 'https://api.themoviedb.org/3';
-        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-        const PLACEHOLDER_IMAGE = '/api/placeholder/200/300';
+        const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500'; 
+        const PLACEHOLDER_IMAGE = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20300%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158gdga548g%20text%20%7B%20fill%3A%23AAAAAA%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A15pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158gdga548g%22%3E%3Crect%20width%3D%22200%22%20height%3D%22300%22%20fill%3D%22%23EEEEEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2240.3515625%22%20y%3D%22156.6%22%3ENo%20Image%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E';
+        const TALK_SHOW_GENRE_ID = 10767; // Genre ID for "Talk" (Talk Shows)
 
-        // DOM Elements
+        // DOM Element References
         const searchInput = document.getElementById('search-input');
         const plotInput = document.getElementById('plot-input');
+        const textGenreSearchInput = document.getElementById('text-genre-search-input'); 
         const searchButton = document.getElementById('search-button');
         const searchResults = document.getElementById('search-results');
         const similarContainer = document.getElementById('similar-container');
@@ -391,350 +453,516 @@
         const searchPanels = document.querySelectorAll('.search-panel');
         const genreSpinner = document.getElementById('genre-spinner');
 
-        // State
-        let searchType = 'multi'; // 'multi', 'movie', or 'tv'
-        let activeTab = 'keyword'; // 'keyword', 'genre', or 'plot'
-        let genres = {
+        // Application State
+        let searchType = 'multi'; 
+        let activeTab = 'keyword'; 
+        let genres = { 
             movie: [],
             tv: []
         };
-        let selectedGenres = [];
+        let selectedGenres = []; 
 
         // Initialize
         document.addEventListener('DOMContentLoaded', initializeApp);
 
+        /**
+         * Initializes the application: fetches genres and sets up tab switching.
+         */
         async function initializeApp() {
-            // Fetch genres when the app loads
             try {
-                const [movieGenres, tvGenres] = await Promise.all([
-                    fetchFromApi('/genre/movie/list'),
-                    fetchFromApi('/genre/tv/list')
+                genreSpinner.style.display = 'block'; 
+                const [movieGenresResponse, tvGenresResponse] = await Promise.all([
+                    fetchFromApi('/genre/movie/list?language=en'),
+                    fetchFromApi('/genre/tv/list?language=en')
                 ]);
                 
-                genres.movie = movieGenres.genres;
-                genres.tv = tvGenres.genres;
+                genres.movie = movieGenresResponse.genres || []; 
+                genres.tv = (tvGenresResponse.genres || []).filter(genre => genre.id !== TALK_SHOW_GENRE_ID);     
                 
-                // Combine and deduplicate genres
-                renderGenreChips();
+                renderGenreChips(); 
             } catch (error) {
                 console.error('Error loading genres:', error);
-                showError();
+                showError('Failed to load genre list. Please try refreshing.'); 
+                genreSpinner.style.display = 'none'; 
+                if (genreContainer) genreContainer.textContent = "Failed to load genres for selection.";
             }
 
-            // Set up tab switching
             searchTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     searchTabs.forEach(t => t.classList.remove('active'));
                     searchPanels.forEach(p => p.classList.remove('active'));
                     
                     tab.classList.add('active');
-                    activeTab = tab.dataset.tab;
-                    document.getElementById(`${activeTab}-panel`).classList.add('active');
+                    activeTab = tab.dataset.tab; 
+                    const activePanel = document.getElementById(`${activeTab}-panel`);
+                    if (activePanel) {
+                        activePanel.classList.add('active');
+                    }
                 });
             });
         }
 
+        /**
+         * Renders genre chips in the genre selection panel.
+         */
         function renderGenreChips() {
-            genreSpinner.style.display = 'none';
+            if (genreSpinner) genreSpinner.style.display = 'none'; 
             
-            // Combine genres from movies and TV, removing duplicates
             const uniqueGenres = [];
-            const seenIds = new Set();
+            const seenIds = new Set(); 
             
-            // Add movie genres
-            genres.movie.forEach(genre => {
-                if (!seenIds.has(genre.id)) {
+            (genres.movie || []).forEach(genre => {
+                if (genre && genre.id && genre.name && !seenIds.has(genre.id) && genre.id !== TALK_SHOW_GENRE_ID) {
                     uniqueGenres.push(genre);
                     seenIds.add(genre.id);
                 }
             });
             
-            // Add TV genres if not already added
-            genres.tv.forEach(genre => {
-                if (!seenIds.has(genre.id)) {
+            (genres.tv || []).forEach(genre => {
+                 if (genre && genre.id && genre.name && !seenIds.has(genre.id)) { 
                     uniqueGenres.push(genre);
                     seenIds.add(genre.id);
                 }
             });
             
-            // Sort alphabetically
-            uniqueGenres.sort((a, b) => a.name.localeCompare(b.name));
+            uniqueGenres.sort((a, b) => a.name.localeCompare(b.name)); 
             
-            // Create chips
-            genreContainer.innerHTML = '';
+            if (genreContainer) genreContainer.innerHTML = ''; 
+            if (uniqueGenres.length === 0 && genreContainer) {
+                genreContainer.textContent = "No genres available for selection at this time.";
+                return;
+            }
+
             uniqueGenres.forEach(genre => {
                 const chip = document.createElement('div');
                 chip.className = 'genre-chip';
                 chip.textContent = genre.name;
-                chip.dataset.id = genre.id;
+                chip.dataset.id = genre.id; 
                 
                 chip.addEventListener('click', () => {
                     chip.classList.toggle('selected');
-                    
+                    const genreId = parseInt(chip.dataset.id, 10); 
                     if (chip.classList.contains('selected')) {
-                        if (!selectedGenres.includes(genre.id)) {
-                            selectedGenres.push(genre.id);
+                        if (!selectedGenres.includes(genreId)) {
+                            selectedGenres.push(genreId);
                         }
                     } else {
-                        selectedGenres = selectedGenres.filter(id => id !== genre.id);
+                        selectedGenres = selectedGenres.filter(id => id !== genreId);
                     }
                 });
-                
-                genreContainer.appendChild(chip);
+                if (genreContainer) genreContainer.appendChild(chip);
             });
         }
 
-        // Event Listeners
-        searchButton.addEventListener('click', handleSearch);
-        searchInput.addEventListener('keypress', (e) => {
+        // Event Listeners for search actions
+        if (searchButton) searchButton.addEventListener('click', handleSearch);
+        if (searchInput) searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+        if (textGenreSearchInput) textGenreSearchInput.addEventListener('keypress', (e) => { 
+            if (e.key === 'Enter') handleSearch();
+        });
+        if (plotInput) plotInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                handleSearch();
+                 e.preventDefault(); 
+                 handleSearch();
             }
         });
 
-        toggleAll.addEventListener('click', () => setSearchType('multi'));
-        toggleMovies.addEventListener('click', () => setSearchType('movie'));
-        toggleTV.addEventListener('click', () => setSearchType('tv'));
+        // Event Listeners for toggling search type
+        if (toggleAll) toggleAll.addEventListener('click', () => setSearchType('multi'));
+        if (toggleMovies) toggleMovies.addEventListener('click', () => setSearchType('movie'));
+        if (toggleTV) toggleTV.addEventListener('click', () => setSearchType('tv'));
 
-        // Functions
+        /**
+         * Sets the search type and updates toggle button styles.
+         * @param {string} type - The search type ('multi', 'movie', 'tv').
+         */
         function setSearchType(type) {
             searchType = type;
-            toggleAll.classList.toggle('active', type === 'multi');
-            toggleMovies.classList.toggle('active', type === 'movie');
-            toggleTV.classList.toggle('active', type === 'tv');
+            if (toggleAll) toggleAll.classList.toggle('active', type === 'multi');
+            if (toggleMovies) toggleMovies.classList.toggle('active', type === 'movie');
+            if (toggleTV) toggleTV.classList.toggle('active', type === 'tv');
         }
 
+        /**
+         * Sorts an array of media items by vote_average (descending) then popularity (descending).
+         * @param {Array} results - Array of media items.
+         * @returns {Array} Sorted array of media items.
+         */
+        function sortByRatingAndPopularity(results) {
+            return (results || []).sort((a, b) => {
+                const voteA = a.vote_average || 0;
+                const voteB = b.vote_average || 0;
+                if (voteB !== voteA) {
+                    return voteB - voteA; // Sort by vote_average descending
+                }
+                // If vote_average is the same, sort by popularity descending
+                const popA = a.popularity || 0;
+                const popB = b.popularity || 0;
+                return popB - popA;
+            });
+        }
+
+        /**
+         * Handles the main search logic.
+         */
         async function handleSearch() {
-            let query = '';
             let validSearch = false;
-            
-            // Check which search method is active
+            let searchOperation = null; 
+
             if (activeTab === 'keyword') {
-                query = searchInput.value.trim();
-                validSearch = query !== '';
-            } else if (activeTab === 'genre') {
+                const keywordInputValue = searchInput.value.trim();
+                const genreTextInputValue = textGenreSearchInput.value.trim();
+
+                if (genreTextInputValue !== '') { 
+                    searchOperation = () => searchBySingleGenreName(genreTextInputValue);
+                    validSearch = true;
+                } else if (keywordInputValue !== '') { 
+                    searchOperation = () => searchByKeyword(keywordInputValue);
+                    validSearch = true;
+                }
+            } else if (activeTab === 'genre') { 
                 validSearch = selectedGenres.length > 0;
-            } else if (activeTab === 'plot') {
-                query = plotInput.value.trim();
-                validSearch = query !== '';
+                if (validSearch) {
+                    searchOperation = () => searchByGenreChips(); 
+                }
+            } else if (activeTab === 'plot') { 
+                const plotQuery = plotInput.value.trim();
+                validSearch = plotQuery !== '';
+                if (validSearch) {
+                    searchOperation = () => searchByPlot(plotQuery);
+                }
             }
             
             if (!validSearch) {
-                // Show error or alert
-                alert('Please enter a search term or select genres');
+                alert('Please enter a search term, select genres, or describe a plot.');
                 return;
             }
 
-            showLoading();
-            resetResults();
+            showLoading(); 
 
             try {
                 let results = [];
-                
-                if (activeTab === 'keyword') {
-                    results = await searchByKeyword(query);
-                } else if (activeTab === 'genre') {
-                    results = await searchByGenre();
-                } else if (activeTab === 'plot') {
-                    results = await searchByPlot(query);
-                }
-                
-                if (results.length === 0) {
-                    showNoResults();
+                if (searchOperation) {
+                    results = await searchOperation(); 
                 } else {
-                    displaySearchResults(results);
+                    console.error("Search operation not defined despite valid search criteria.");
+                    showError('An unexpected error occurred. Please try again.');
+                    hideLoading();
+                    return;
+                }
+                
+                if (results && results.length > 0) {
+                    displaySearchResults(results); // Results are now sorted by rating by search functions
+                } else { 
+                    showNoResults(); 
                 }
             } catch (error) {
-                console.error('Search error:', error);
-                showError();
+                console.error('Search error during operation:', error);
+                showError('An error occurred while searching. Please check your connection and try again.');
             } finally {
-                hideLoading();
+                hideLoading(); 
             }
         }
+        
+        /**
+         * Searches for media by a single genre name.
+         * @param {string} genreName - The genre name.
+         * @returns {Promise<Array>} Sorted array of search results by rating.
+         */
+        async function searchBySingleGenreName(genreName) {
+            const allAvailableGenres = [...(genres.movie || []), ...(genres.tv || [])] 
+                                       .filter(g => g && g.id && g.name); 
+            const foundGenre = allAvailableGenres.find(g => g.name.toLowerCase() === genreName.toLowerCase());
 
+            if (genreName.toLowerCase() === "talk" || (foundGenre && foundGenre.id === TALK_SHOW_GENRE_ID)) {
+                 console.log("Talk shows are excluded.");
+                 return []; 
+            }
+
+            if (!foundGenre) {
+                console.log(`Genre "${genreName}" not found by exact match, trying as keyword.`);
+                return await searchByKeyword(genreName); // searchByKeyword now sorts by rating
+            }
+
+            const genreId = foundGenre.id;
+            let combinedResults = [];
+            const fetchPromises = []; 
+
+            if (searchType === 'multi' || searchType === 'movie') {
+                const movieDiscoverUrl = `/discover/movie?with_genres=${genreId}&sort_by=popularity.desc&include_adult=false&page=1` +
+                                         (genreId === TALK_SHOW_GENRE_ID ? `&without_genres=${TALK_SHOW_GENRE_ID}` : ''); 
+                fetchPromises.push(
+                    fetchFromApi(movieDiscoverUrl)
+                    .then(res => (res.results || []).map(item => ({...item, media_type: 'movie'}))) 
+                    .catch(e => { console.error("Error fetching movies by genre name:", e); return []; }) 
+                );
+            }
+            if (searchType === 'multi' || searchType === 'tv') {
+                 fetchPromises.push(
+                    fetchFromApi(`/discover/tv?with_genres=${genreId}&sort_by=popularity.desc&include_adult=false&page=1&without_genres=${TALK_SHOW_GENRE_ID}`)
+                    .then(res => (res.results || []).map(item => ({...item, media_type: 'tv'}))) 
+                    .catch(e => { console.error("Error fetching TV shows by genre name:", e); return []; })
+                );
+            }
+            
+            const resultsArrays = await Promise.all(fetchPromises); 
+            resultsArrays.forEach(arr => combinedResults.push(...arr)); 
+            
+            let uniqueResults = Array.from(new Map(combinedResults.map(item => [item.id, item])).values());
+            let filteredWithPosters = uniqueResults.filter(item => 
+                item.poster_path &&
+                !(item.media_type === 'tv' && item.genre_ids && item.genre_ids.includes(TALK_SHOW_GENRE_ID))
+            );
+            return sortByRatingAndPopularity(filteredWithPosters); 
+        }
+
+        /**
+         * Searches for media by keyword. Results are sorted by rating.
+         * @param {string} query - The search query.
+         * @returns {Promise<Array>} Sorted array of search results by rating.
+         */
         async function searchByKeyword(query) {
-            const response = await fetchFromApi(`/search/${searchType}?query=${encodeURIComponent(query)}&include_adult=false`);
-            return response.results.filter(item => 
-                (searchType === 'multi' ? item.media_type !== 'person' : true) && 
-                (searchType === 'multi' ? (item.media_type === 'movie' || item.media_type === 'tv') : true)
-            );
+            const endpoint = `/search/${searchType}?query=${encodeURIComponent(query)}&include_adult=false&page=1`;
+            const response = await fetchFromApi(endpoint);
+            let filteredResults = (response.results || [])
+                .filter(item =>  
+                    (searchType === 'multi' ? item.media_type !== 'person' : true) && 
+                    (searchType === 'multi' ? (item.media_type === 'movie' || item.media_type === 'tv') : true) &&
+                    (item.poster_path) &&
+                    !(item.media_type === 'tv' && item.genre_ids && item.genre_ids.includes(TALK_SHOW_GENRE_ID))
+                );
+            return sortByRatingAndPopularity(filteredResults); 
         }
 
-        async function searchByGenre() {
-            // If no genres selected, return empty array
-            if (selectedGenres.length === 0) return [];
+        /**
+         * Searches for media based on selected genre chips.
+         * @returns {Promise<Array>} Sorted array of search results by rating.
+         */
+        async function searchByGenreChips() { 
+            if (selectedGenres.length === 0) return []; 
             
-            const genreString = selectedGenres.join(',');
-            const mediaType = searchType === 'multi' ? 'movie' : searchType; // Default to movie if 'multi'
-            
-            // Use the discover API to find content by genre
-            const response = await fetchFromApi(`/discover/${mediaType}?with_genres=${genreString}&sort_by=popularity.desc`);
-            
-            let results = response.results;
-            
-            // If 'multi' is selected, also search for TV shows with these genres
-            if (searchType === 'multi') {
-                const tvResponse = await fetchFromApi(`/discover/tv?with_genres=${genreString}&sort_by=popularity.desc`);
-                
-                // Add media_type to each result
-                results = results.map(item => ({...item, media_type: 'movie'}));
-                const tvResults = tvResponse.results.map(item => ({...item, media_type: 'tv'}));
-                
-                // Combine and sort by popularity
-                results = [...results, ...tvResults].sort((a, b) => b.popularity - a.popularity);
+            const genreString = selectedGenres.join(','); 
+            let combinedResults = [];
+            const fetchPromises = [];
+
+            if (searchType === 'multi' || searchType === 'movie') {
+                 fetchPromises.push(
+                    fetchFromApi(`/discover/movie?with_genres=${genreString}&sort_by=popularity.desc&include_adult=false&page=1`)
+                    .then(res => (res.results || []).map(item => ({...item, media_type: 'movie'})))
+                    .catch(e => { console.error("Error fetching movies by selected genres:", e); return []; })
+                );
+            }
+            if (searchType === 'multi' || searchType === 'tv') {
+                fetchPromises.push(
+                    fetchFromApi(`/discover/tv?with_genres=${genreString}&sort_by=popularity.desc&include_adult=false&page=1&without_genres=${TALK_SHOW_GENRE_ID}`)
+                    .then(res => (res.results || []).map(item => ({...item, media_type: 'tv'})))
+                    .catch(e => { console.error("Error fetching TV shows by selected genres:", e); return []; })
+                );
             }
             
-            return results;
+            const resultsArrays = await Promise.all(fetchPromises);
+            resultsArrays.forEach(arr => combinedResults.push(...arr));
+
+            let uniqueResults = Array.from(new Map(combinedResults.map(item => [item.id, item])).values());
+            let filteredWithPosters = uniqueResults.filter(item => 
+                item.poster_path &&
+                !(item.media_type === 'tv' && item.genre_ids && item.genre_ids.includes(TALK_SHOW_GENRE_ID))
+            );
+            return sortByRatingAndPopularity(filteredWithPosters); 
         }
 
+        /**
+         * Searches for media based on a plot description.
+         * @param {string} plotDescription - The plot description.
+         * @returns {Promise<Array>} Sorted array of search results by rating.
+         */
         async function searchByPlot(plotDescription) {
-            // Convert plot to keywords
-            const keywords = plotDescription.split(/\s+/)
-                .filter(word => word.length > 3)  // Filter out short words
-                .slice(0, 5);  // Limit to 5 keywords
+            const fullQueryResults = await searchByKeyword(plotDescription); // Already sorted by rating
             
-            // First try to search by the entire plot as a query
-            const fullQueryResults = await searchByKeyword(plotDescription);
-            
-            // If we have enough results, return them
-            if (fullQueryResults.length >= 5) {
-                return fullQueryResults;
+            let allResults = [...fullQueryResults];
+            const seenIds = new Set(fullQueryResults.map(item => `${item.id}-${item.media_type || (item.first_air_date || item.name ? 'tv' : 'movie')}`));
+
+            if (fullQueryResults.length < 10) { 
+                const keywords = plotDescription.toLowerCase().match(/\b(\w{4,})\b/g) || []; 
+                const uniqueKeywords = [...new Set(keywords)].slice(0, 2); 
+
+                if (uniqueKeywords.length > 0) {
+                     const keywordPromises = uniqueKeywords.map(keyword => searchByKeyword(keyword)); // Also sorts by rating
+                     const keywordSearchBatches = await Promise.all(keywordPromises);
+                     keywordSearchBatches.forEach(batch => {
+                        batch.forEach(item => { 
+                            const mediaType = item.media_type || (item.first_air_date || item.name ? 'tv' : 'movie');
+                            const itemId = `${item.id}-${mediaType}`;
+                            if (item.poster_path && !seenIds.has(itemId)) { 
+                                allResults.push(item);
+                                seenIds.add(itemId);
+                            }
+                        });
+                     });
+                }
             }
-            
-            // Otherwise, try to find content with similar themes using keywords
-            const keywordPromises = keywords.map(keyword => 
-                searchByKeyword(keyword)
-            );
-            
-            const keywordResults = await Promise.all(keywordPromises);
-            
-            // Flatten and deduplicate results
-            const allResults = [...fullQueryResults];
-            const seenIds = new Set(fullQueryResults.map(item => `${item.id}-${item.media_type || (item.first_air_date ? 'tv' : 'movie')}`));
-            
-            keywordResults.forEach(results => {
-                results.forEach(item => {
-                    const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-                    const itemId = `${item.id}-${mediaType}`;
-                    
-                    if (!seenIds.has(itemId)) {
-                        allResults.push(item);
-                        seenIds.add(itemId);
-                    }
-                });
-            });
-            
-            // Sort by popularity
-            return allResults.sort((a, b) => b.popularity - a.popularity).slice(0, 20);
+            return sortByRatingAndPopularity(allResults.filter(item => item.poster_path));
         }
 
+
+        /**
+         * Fetches similar or recommended media, sorted by rating.
+         * @param {number} id - The ID of the movie or TV show.
+         * @param {string} type - The type of media ('movie' or 'tv').
+         * @returns {Promise<Array>} Sorted array of similar/recommended media by rating.
+         */
         async function getSimilarMedia(id, type) {
-            // First try to get recommendations (usually better than similar)
+            let rawResults = [];
             try {
-                const recommendResponse = await fetchFromApi(`/${type}/${id}/recommendations`);
+                const recommendResponse = await fetchFromApi(`/${type}/${id}/recommendations?language=en-US&page=1`);
                 if (recommendResponse.results && recommendResponse.results.length > 0) {
-                    return recommendResponse.results;
+                    rawResults = recommendResponse.results;
                 }
             } catch (error) {
-                console.log("Recommendations API failed, falling back to similar");
+                console.log(`Recommendations API failed for ${type}/${id}, falling back to similar:`, error.message);
             }
             
-            // Fallback to similar if recommendations don't work or return empty
-            const similarResponse = await fetchFromApi(`/${type}/${id}/similar`);
-            return similarResponse.results;
+            if (rawResults.length === 0) { 
+                try {
+                    const similarResponse = await fetchFromApi(`/${type}/${id}/similar?language=en-US&page=1`);
+                    rawResults = similarResponse.results || [];
+                } catch (error) {
+                    console.error(`Similar API also failed for ${type}/${id}:`, error.message);
+                    return []; 
+                }
+            }
+            
+            let filteredResults = (rawResults || [])
+                .filter(item => 
+                    item.poster_path &&
+                    !(type === 'tv' && item.genre_ids && item.genre_ids.includes(TALK_SHOW_GENRE_ID)) &&
+                    !(item.media_type === 'tv' && item.genre_ids && item.genre_ids.includes(TALK_SHOW_GENRE_ID)) 
+                );
+            return sortByRatingAndPopularity(filteredResults); 
         }
 
+        /**
+         * Generic function to fetch data from the TMDB API.
+         * @param {string} endpoint - The API endpoint.
+         * @returns {Promise<Object>} JSON response from the API.
+         */
         async function fetchFromApi(endpoint) {
             const response = await fetch(`${BASE_URL}${endpoint}`, {
-                headers: {
-                    'Authorization': `Bearer ${API_KEY}`,
-                    'Content-Type': 'application/json'
-                }
+                 headers: {
+                     'Authorization': `Bearer ${API_KEY}`, 
+                     'Content-Type': 'application/json;charset=utf-8'
+                 }
             });
 
             if (!response.ok) {
-                throw new Error(`API Error: ${response.status}`);
+                const errorData = await response.json().catch(() => ({ message: 'Unknown API error details' }));
+                console.error('API Error Response:', errorData); 
+                throw new Error(`API Error: ${response.status} - ${errorData.status_message || errorData.message || response.statusText}`);
             }
-
             return await response.json();
         }
 
-        function displaySearchResults(results) {
-            searchResults.innerHTML = '';
+        /**
+         * Displays search results in the UI, truncated to top 10.
+         * @param {Array} resultsData - Sorted array of media items by rating.
+         */
+        function displaySearchResults(resultsData) {
+            if (searchResults) searchResults.innerHTML = ''; 
             
-            // Limit to 24 results for better performance
-            const limitedResults = results.slice(0, 24);
+            const itemsToDisplay = (resultsData || [])
+                                   .filter(item => item && item.poster_path) 
+                                   .slice(0, 10); 
+
+            if (itemsToDisplay.length === 0) {
+                showNoResults(); 
+                return;
+            }
             
-            limitedResults.forEach(item => {
+            itemsToDisplay.forEach(item => {
                 const card = createMediaCard(item);
-                searchResults.appendChild(card);
+                if (searchResults) searchResults.appendChild(card);
             });
         }
 
+        /**
+         * Shows similar media, truncated to top 10.
+         * @param {number} id - ID of the selected media.
+         * @param {string} type - Type of the media ('movie' or 'tv').
+         * @param {string} title - Title of the selected media.
+         */
         async function showSimilarMedia(id, type, title) {
-            showLoading();
-            similarContainer.style.display = 'none';
-            similarResults.innerHTML = '';
+            showLoading(); 
 
             try {
-                const similarMedia = await getSimilarMedia(id, type);
+                const sortedSimilarMedia = await getSimilarMedia(id, type); // Already sorted by rating
                 
-                // Filter out exact title matches and limit to top 12 results
-                const filteredMedia = similarMedia
+                const filteredMedia = (sortedSimilarMedia || [])
                     .filter(item => {
-                        const itemTitle = type === 'tv' ? item.name : item.title;
-                        return !itemTitle.toLowerCase().includes(title.toLowerCase()) && 
-                               !title.toLowerCase().includes(itemTitle.toLowerCase());
+                        const itemTitle = ((item.media_type || type) === 'tv' ? item.name : item.title) || '';
+                        return itemTitle.toLowerCase() !== title.toLowerCase(); 
                     })
-                    .slice(0, 12);
+                    .slice(0, 10); 
                 
+                if (similarToSpan) similarToSpan.textContent = title; 
+                if (similarContainer) similarContainer.style.display = 'block';
+
+                if (similarResults) similarResults.innerHTML = ''; 
+
                 if (filteredMedia.length > 0) {
-                    similarToSpan.textContent = title;
-                    similarContainer.style.display = 'block';
-                    
                     filteredMedia.forEach(item => {
-                        const card = createMediaCard(item, type);
-                        similarResults.appendChild(card);
+                        const card = createMediaCard(item, item.media_type || type); 
+                        if (similarResults) similarResults.appendChild(card);
                     });
+                    if (similarContainer) similarContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
-                    noResults.style.display = 'block';
-                    noResults.innerHTML = '<h3>No recommendations found</h3><p>Try another title to find recommendations.</p>';
+                    if (similarResults) similarResults.innerHTML = '<p style="text-align:center; width:100%;">No further recommendations found for this title.</p>';
                 }
             } catch (error) {
                 console.error('Error getting similar media:', error);
-                showError();
+                showError('Could not load recommendations. Please try again.'); 
             } finally {
                 hideLoading();
             }
         }
 
+        /**
+         * Creates an HTML card element for a media item.
+         * @param {Object} item - The media item data.
+         * @param {string} [forcedType=null] - Optionally force the media type.
+         * @returns {HTMLElement} The created card element.
+         */
         function createMediaCard(item, forcedType = null) {
-            const type = forcedType || item.media_type || (item.first_air_date ? 'tv' : 'movie');
-            const title = type === 'tv' ? item.name : item.title;
-            const date = type === 'tv' ? item.first_air_date : item.release_date;
-            const formattedDate = date ? new Date(date).getFullYear() : 'Unknown';
+            let itemType = forcedType || item.media_type;
+            if (!itemType) { 
+                itemType = (item.first_air_date || (item.name && !item.title)) ? 'tv' : 'movie';
+            }
+            
+            const title = (itemType === 'tv' ? item.name : item.title) || 'Title Unavailable';
+            const date = itemType === 'tv' ? item.first_air_date : item.release_date;
+            const year = date ? new Date(date).getFullYear() : (item.release_year || 'N/A'); 
             
             const card = document.createElement('div');
             card.className = 'result-card';
             card.setAttribute('data-id', item.id);
-            card.setAttribute('data-type', type);
+            card.setAttribute('data-type', itemType); 
             card.setAttribute('data-title', title);
             
             card.addEventListener('click', () => {
-                showSimilarMedia(item.id, type, title);
-                window.scrollTo({ top: similarContainer.offsetTop - 20, behavior: 'smooth' });
+                showSimilarMedia(item.id, itemType, title); 
             });
             
             const imageUrl = item.poster_path ? `${IMAGE_BASE_URL}${item.poster_path}` : PLACEHOLDER_IMAGE;
             
             card.innerHTML = `
-                <img class="card-image" src="${imageUrl}" alt="${title}" onerror="this.src='${PLACEHOLDER_IMAGE}'">
+                <img class="card-image" src="${imageUrl}" alt="${title}" onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}';">
                 <div class="card-content">
-                    <div class="card-title">${title}</div>
+                    <div class="card-title" title="${title}">${title}</div>
                     <div class="card-info">
-                        <span>${formattedDate}</span>
+                        <span>${year}</span>
                         <span class="rating">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                             </svg>
                             ${item.vote_average ? item.vote_average.toFixed(1) : 'N/A'}
@@ -742,36 +970,43 @@
                     </div>
                 </div>
             `;
-            
             return card;
         }
 
-        // Utility functions
+        // UI Utility Functions
         function showLoading() {
-            loading.style.display = 'block';
+            if (loading) loading.style.display = 'block';
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (noResults) noResults.style.display = 'none';
+            if (searchResults) searchResults.innerHTML = ''; 
+            if (similarContainer) similarContainer.style.display = 'none'; 
+            if (similarResults) similarResults.innerHTML = ''; 
         }
 
         function hideLoading() {
-            loading.style.display = 'none';
+            if (loading) loading.style.display = 'none';
         }
 
-        function showError() {
-            errorMessage.style.display = 'block';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
+        function showError(message) {
+            if (errorMessage) {
+                errorMessage.textContent = message || 'Sorry, there was an error processing your request. Please try again.';
+                errorMessage.style.display = 'block';
+            }
         }
 
         function showNoResults() {
-            noResults.style.display = 'block';
+            if (noResults) {
+                noResults.innerHTML = '<h3>No results found</h3><p>Try different search criteria or check your spelling.</p>';
+                noResults.style.display = 'block';
+            }
         }
 
-        function resetResults() {
-            searchResults.innerHTML = '';
-            similarContainer.style.display = 'none';
-            similarResults.innerHTML = '';
-            errorMessage.style.display = 'none';
-            noResults.style.display = 'none';
+        function resetResults() { 
+            if (searchResults) searchResults.innerHTML = '';
+            if (similarContainer) similarContainer.style.display = 'none';
+            if (similarResults) similarResults.innerHTML = '';
+            if (errorMessage) errorMessage.style.display = 'none';
+            if (noResults) noResults.style.display = 'none';
         }
     </script>
 </body>
