@@ -9,7 +9,8 @@
             --primary-color: #032541;
             --secondary-color: #01b4e4;
             --text-color: #333;
-            --background-color: #f5f5f5;
+            /* Changed background color to a light gray */
+            --background-color: #e5e7eb; /* Tailwind gray-200 */ 
             --card-color: #fff;
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -18,7 +19,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
+            background-color: var(--background-color); /* Apply the updated background color */
             color: var(--text-color);
             line-height: 1.6;
         }
@@ -41,7 +42,8 @@
             flex-direction: column;
             align-items: center;
             margin: 2rem 0;
-            background-color: var(--card-color);
+            /* Changed background to match body background */
+            background-color: var(--background-color); 
             padding: 2rem;
             border-radius: 8px;
             box-shadow: var(--shadow);
@@ -52,15 +54,14 @@
             width: 100%;
             max-width: 600px;
             margin-bottom: 1rem;
-            flex-direction: column; /* Ensures label is above input */
+            flex-direction: column; 
         }
 
-        /* Style for labels within search-box */
         .search-box label {
             display: block; 
             margin-bottom: 0.5rem; 
             font-weight: bold;
-            color: var(--text-color); /* Ensure label color is consistent */
+            color: var(--text-color); 
         }
 
         .search-row { 
@@ -76,8 +77,9 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: inherit;
-            width: 100%; /* Ensure inputs take full width of their container */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            width: 100%; 
+            box-sizing: border-box; 
+            background-color: #fff; /* Ensure input backgrounds remain white */
         }
 
         textarea {
@@ -94,20 +96,20 @@
             cursor: pointer;
             border-radius: 4px;
             transition: background-color 0.3s;
-            margin-top: 1rem; /* Spacing above the button */
-            width: 100%; /* Make button full width of its container */
-            max-width: 600px; /* Align with search box max-width */
+            margin-top: 1rem; 
+            width: 100%; 
+            max-width: 600px; 
         }
 
         .search-button:hover {
-            background-color: #019bc2; /* Darker shade on hover */
+            background-color: #019bc2; 
         }
 
         .toggle-container {
             display: flex;
-            justify-content: center; /* Center toggle buttons */
+            justify-content: center; 
             margin-top: 1rem; 
-            margin-bottom: 1rem; /* Added margin below for spacing */
+            margin-bottom: 1rem; 
         }
 
         .toggle-button {
@@ -129,7 +131,7 @@
         .loading {
             text-align: center;
             margin: 2rem 0;
-            display: none; /* Hidden by default */
+            display: none; 
         }
 
         .spinner {
@@ -137,9 +139,9 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border-left-color: var(--secondary-color); /* Spinner color */
+            border-left-color: var(--secondary-color); 
             animation: spin 1s linear infinite;
-            margin: 0 auto; /* Center spinner */
+            margin: 0 auto; 
         }
 
         @keyframes spin {
@@ -154,29 +156,29 @@
         .search-results {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem; /* Space between cards */
-            justify-content: center; /* Center cards in the container */
+            gap: 1.5rem; 
+            justify-content: center; 
         }
 
         .result-card {
-            width: 200px; /* Default width for cards */
-            background-color: var(--card-color);
+            width: 200px; 
+            background-color: var(--card-color); /* Keep cards white */
             border-radius: 8px;
-            overflow: hidden; /* Ensures content respects border radius */
+            overflow: hidden; 
             box-shadow: var(--shadow);
             transition: transform 0.3s;
             cursor: pointer;
         }
 
         .result-card:hover {
-            transform: translateY(-5px); /* Slight lift effect on hover */
+            transform: translateY(-5px); 
         }
 
         .card-image {
             width: 100%;
-            height: 300px; /* Fixed height for images */
-            object-fit: cover; /* Ensures image covers the area, cropping if necessary */
-            background-color: #ddd; /* Placeholder color if image fails to load */
+            height: 300px; 
+            object-fit: cover; 
+            background-color: #ddd; 
         }
 
         .card-content {
@@ -187,17 +189,17 @@
             font-weight: bold;
             margin-bottom: 0.5rem;
             font-size: 1rem;
-            white-space: nowrap; /* Prevent title from wrapping */
-            overflow: hidden; /* Hide overflow */
-            text-overflow: ellipsis; /* Add ellipsis for long titles */
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
         }
 
         .card-info {
             font-size: 0.9rem;
             color: #666;
             display: flex;
-            justify-content: space-between; /* Pushes year and rating to opposite ends */
-            align-items: center; /* Vertically align year and rating */
+            justify-content: space-between; 
+            align-items: center; 
         }
 
         .similar-results {
@@ -208,33 +210,33 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             text-align: center;
-            color: var(--primary-color); /* Use primary color for this title */
+            color: var(--primary-color); 
         }
 
         .error-message {
             text-align: center;
-            color: #e53935; /* Red color for errors */
+            color: #e53935; 
             padding: 1rem;
-            background-color: #ffebee; /* Light red background */
+            background-color: #ffebee; 
             border-radius: 4px;
-            margin: 1rem auto; /* Centered */
-            max-width: 600px; /* Consistent width */
-            display: none; /* Hidden by default */
+            margin: 1rem auto; 
+            max-width: 600px; 
+            display: none; 
         }
 
         .no-results {
             text-align: center;
             padding: 2rem;
-            background-color: var(--card-color);
+            background-color: var(--card-color); /* Keep white */
             border-radius: 8px;
-            margin: 1rem auto; /* Centered */
-            max-width: 600px; /* Consistent width */
-            display: none; /* Hidden by default */
+            margin: 1rem auto; 
+            max-width: 600px; 
+            display: none; 
             box-shadow: var(--shadow);
         }
 
         .rating {
-            display: inline-flex; /* Align icon and text */
+            display: inline-flex; 
             align-items: center;
             font-weight: bold;
         }
@@ -243,7 +245,7 @@
             width: 18px;
             height: 18px;
             margin-right: 4px;
-            fill: #ffc107; /* Gold color for star */
+            fill: #ffc107; 
         }
 
         .genre-container {
@@ -252,8 +254,8 @@
             gap: 0.5rem;
             margin: 1rem 0;
             width: 100%;
-            max-width: 600px; /* Match search-box width */
-            justify-content: center; /* Center genre chips */
+            max-width: 600px; 
+            justify-content: center; 
         }
 
         .genre-chip {
@@ -284,7 +286,7 @@
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
             text-align: center;
-            flex-grow: 1; /* Allow tabs to share space equally */
+            flex-grow: 1; 
             color: var(--text-color);
         }
 
@@ -295,13 +297,13 @@
         }
 
         .search-panel {
-            display: none; /* Panels are hidden by default */
+            display: none; 
         }
 
         .search-panel.active {
-            display: block; /* Active panel is shown */
+            display: block; 
             width: 100%; 
-            max-width: 600px; /* Consistent width for panels */
+            max-width: 600px; 
         }
         
         /* Responsive adjustments */
